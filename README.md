@@ -1,50 +1,82 @@
-# Welcome to your Expo app 👋
+# Movipedia
+A mobile movie app built with Expo, React Native, Expo Router, TypeScript, and React Query. View lists of movies, details, descriptions, and play trailers—all within a native-stack navigation.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+---
 
-## Get started
-
-1. Install dependencies
-
+## 🚀 Getting Started
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/your-username/Movipedia.git
+   cd Movipedia
+   ```
+2. **Install dependencies**
    ```bash
    npm install
    ```
-
-2. Start the app
-
+3. **Add your TMDB API key**
+   - Create a file `.env`:
+   - 
+     ```js
+     EXPO_PUBLIC_TMDB_API_KEY = 'YOUR_TMDB_API_KEY';
+     ```
+   - Ensure `movieApi.ts` imports from your env.
+4. **Start the Expo server**
    ```bash
-    npx expo start
+   npm run start
    ```
+   Open on iOS Simulator, Android Emulator, or Expo Go.
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🧱 Core Concepts
+- **Expo Router (v4.x)**: File-based routing built on React Router v6, using a native stack (`<Stack>`).
+- **React Query**: Caching, background refetch, and stale-while-revalidate patterns for network data.
+- **TypeScript**: Typed hooks, services, and components.
+- **Path Aliases**: `@services`, `@hooks`, `@components`, etc., configured in `babel.config.js` and `tsconfig.json`.
+- **TMDB API**: Fetch popular movies, details, and trailers via `/movie/popular`, `/movie/{id}`, and `/movie/{id}/videos`.
+- **WebView**: In-app YouTube embed for trailer playback.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 📱 Screens Overview
+1. **Movies List** (`/`)  
+   - Uses `useMovies` hook.  
+   - Renders `MovieList` (FlatList of `MovieItem`).
 
-When you're ready, run:
+2. **Movie Details** (`/movies/[id]`)  
+   - Uses `useMovie(id)`.  
+   - Shows poster, title, release date, overview snippet.  
+   - Link to Trailers.
 
-```bash
-npm run reset-project
-```
+3. **Movie Trailers** (`/movies/[id]/trailers`)  
+   - Fetches videos via `useMovieVideos(id)`.  
+   - Filters for YouTube trailers.  
+   - Inline player with `react-native-webview`.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+---
 
-## Learn more
+## 🧪 Testing
+- **Jest** with `jest-expo` preset.  
+- **@testing-library/react-native** for component tests.  
+- Run:
+  ```bash
+  npm run test
+  ```
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📦 Scripts
+- `start` — Expo dev server
+- `test` — Jest test runner
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## ⚙️ Decisions and Challenges
+- For this coding challenge, I chose to try a new thing I think is good when it comes to the folder structure of testing, this is by putting the `tests` folder at the root which I think is nice for small-scale projects such as this to have a clear separation between source vs tests
+- As mentioned in the 🧱 Core Concepts, I chose to use React Query, dividing the implementation it into 3 parts, the `services`, `API` and `hooks`. 
+  - `services` (src/services/movieApi.ts): These are the low level functions that calls the API 
+  - `API` layer (src/api/movieQueries.ts): This is where the query cache keys are set to ensure that there's a single source of truth for query keys for cases that it needs to be re-set or changed in the future.
+  - `hooks` Utilize React Query’s useQuery to query data and display it.
+- This is to decouple fetching, querying and component usage to ensure separation of concerns and reusability.
+- I've also wrapped the application with something I created called `ContextCombiner`, which takes an array of Providers that needs to wrap the application and make use of `.reduce` instead of coding every provider in `index.tsx`. This can be found in `src/shared/ContextCombiner`
+- One known challenge as well is that the TMBD API is that there are tens if not hundreds of thousands of items and I've implemented an infinite loading list that could be heavy in the memory if the user has been scrolling down for a while but one way to optimize and mitigate and performance issues is by using FlatList which is very optimized for big lists out of the box rather than using ScrollView and map
