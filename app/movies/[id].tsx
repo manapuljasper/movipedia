@@ -1,6 +1,13 @@
 import React from "react";
-import { Text, ScrollView, Image, StyleSheet, Dimensions } from "react-native";
-import { useLocalSearchParams, Link } from "expo-router";
+import {
+  Text,
+  ScrollView,
+  Image,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
+import { useLocalSearchParams, Link, useRouter } from "expo-router";
 import { useMovie } from "@hooks/movies/useMovie";
 
 const { width } = Dimensions.get("window");
@@ -8,8 +15,13 @@ const posterWidth = width;
 const posterHeight = posterWidth * 1.5;
 
 export default function MovieDetailScreen() {
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: movie, isLoading, error } = useMovie(id);
+
+  const handleNavigateToTrailer = () => {
+    router.push(`/movies/${id}/trailers`);
+  };
 
   if (isLoading) return <Text>Loading movie...</Text>;
   if (error || !movie) return <Text>Error loading movie.</Text>;
@@ -38,6 +50,13 @@ export default function MovieDetailScreen() {
       <Text style={styles.overview} testID="detail-overview">
         {movie.overview}
       </Text>
+
+      <TouchableOpacity
+        onPress={handleNavigateToTrailer}
+        testID="trailers-link"
+      >
+        <Text style={styles.link}>View Trailers</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }

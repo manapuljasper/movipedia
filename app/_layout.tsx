@@ -14,6 +14,12 @@ export default function RootLayout() {
             name="movies/[id]"
             options={{ title: "Movie Details" }}
           />
+
+          {/* Movie trailer */}
+          <Stack.Screen
+            name="movies/[id]/trailers"
+            options={{ title: "Movie Details" }}
+          />
         </Stack>
       </ContextCombiner>
     </SafeAreaProvider>

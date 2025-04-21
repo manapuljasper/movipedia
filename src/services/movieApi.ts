@@ -15,6 +15,19 @@ export interface MoviePage {
   total_results: number;
 }
 
+export interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  type: string; // "Trailer", "Teaser", etc.
+}
+
+export interface VideoPage {
+  id: number;
+  results: Video[];
+}
+
 const TMDB_API_KEY = "6256afe136671b12f4ca075cf0800929";
 const BASE_URL = "https://api.themoviedb.org/3";
 
@@ -48,4 +61,17 @@ export async function fetchMovieById(movieId: string): Promise<Movie> {
 
   const movie = (await res.json()) as Movie;
   return movie;
+}
+
+/**
+ * Fetches videos (including trailers) for a given movie ID.
+ */
+export async function fetchMovieVideos(movieId: number): Promise<VideoPage> {
+  const url = `${BASE_URL}/movie/${movieId}/videos?api_key=${TMDB_API_KEY}&language=en-US`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`TMDB videos fetch error: ${res.status} ${res.statusText}`);
+  }
+  const data = (await res.json()) as VideoPage;
+  return data;
 }
