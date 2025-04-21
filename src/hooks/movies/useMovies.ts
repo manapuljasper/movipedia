@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { MOVIES_QUERY_KEYS, getMovies } from "../api/movieQueries";
+import { MOVIES_QUERY_KEYS, getMovies } from "@api/movieQueries";
 
 export function useMovies(page = 1) {
   return useQuery({
