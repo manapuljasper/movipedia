@@ -1,28 +1,49 @@
+import MovieItem from "@/src/components/movies/MovieItem";
 import { MovieList } from "@/src/components/movies/MovieList/MovieList";
 import { useMovies } from "@hooks/movies/useMovies";
-import { Text, View, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 
 export default function MoviesScreen() {
-  const { data, isLoading, error } = useMovies();
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useMovies();
 
   if (isLoading) return <Text>Loading movies…</Text>;
-  if (error) return <Text>Error loading movies.</Text>;
+  if (isError) return <Text>Error loading movies.</Text>;
+
+  // flatten all pages’ results into one array
+  const movies = data?.pages.flatMap((page) => page.results);
 
   return (
     <View style={{ flex: 1 }}>
-      <MovieList movies={data?.results ?? []} />
+      <FlatList
+        data={movies}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => <MovieItem movie={item} />}
+        contentContainerStyle={{ padding: 16 }}
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={
+          isFetchingNextPage ? (
+            <ActivityIndicator style={{ margin: 16 }} />
+          ) : null
+        }
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#25292e",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: "#fff",
-  },
-});

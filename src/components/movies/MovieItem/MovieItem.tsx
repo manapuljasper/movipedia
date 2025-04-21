@@ -26,11 +26,7 @@ export const MovieItem: React.FC<MovieItemProps> = ({ movie }) => {
   };
 
   return (
-    <Pressable
-      onPress={handlePress}
-      style={styles.linkContainer}
-      testID="movie-item-pressable"
-    >
+    <Pressable onPress={handlePress} testID="movie-item-pressable">
       <View style={styles.card}>
         {movie.poster_path ? (
           <Image
@@ -110,9 +106,6 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 14,
     color: "#666",
-  },
-  linkContainer: {
-    marginBottom: 16,
   },
 });
 

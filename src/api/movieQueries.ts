@@ -2,6 +2,7 @@ import {
   fetchMovieById,
   fetchMovies,
   fetchMovieVideos,
+  MoviePage,
   VideoPage,
 } from "../services/movieApi";
 
@@ -11,8 +12,8 @@ export const MOVIES_QUERY_KEYS = {
   movieVideos: (id?: string) => ["movie-video", id],
 };
 
-export function getMovies(page = 1) {
-  return fetchMovies(page);
+export function getMoviesPage({ pageParam = 1 }): Promise<MoviePage> {
+  return fetchMovies(pageParam);
 }
 
 export function getMovie(id: string) {
