@@ -79,3 +79,4 @@ A mobile movie app built with Expo, React Native, Expo Router, TypeScript, and R
   - `hooks` Utilize React Query’s useQuery to query data and display it.
 - This is to decouple fetching, querying and component usage to ensure separation of concerns and reusability.
 - I've also wrapped the application with something I created called `ContextCombiner`, which takes an array of Providers that needs to wrap the application and make use of `.reduce` instead of coding every provider in `index.tsx`. This can be found in `src/shared/ContextCombiner`
+- One known challenge as well is that the TMBD API is that there are tens if not hundreds of thousands of items and I've implemented an infinite loading list that could be heavy in the memory if the user has been scrolling down for a while but one way to optimize and mitigate and performance issues is by using FlatList which is very optimized for big lists out of the box rather than using ScrollView and map
