@@ -29,15 +29,6 @@ export default function MoviesScreen() {
     isFetchingNextPage,
   } = search ? searchQuery : listQuery;
 
-  if (isLoading)
-    return (
-      <FlatList
-        data={Array.from({ length: 6 })}
-        keyExtractor={(_, i) => i.toString()}
-        renderItem={() => <MovieItemSkeleton />}
-        contentContainerStyle={styles.list}
-      />
-    );
   if (isError) return <ErrorScreen />;
 
   // flatten all pages’ results into one array
@@ -53,23 +44,32 @@ export default function MoviesScreen() {
         clearButtonMode="while-editing"
         placeholderTextColor={"gray"}
       />
-      <FlatList
-        data={movies}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <MovieItem movie={item} />}
-        contentContainerStyle={styles.list}
-        onEndReached={() => {
-          if (hasNextPage) {
-            fetchNextPage();
+      {isLoading ? (
+        <FlatList
+          data={Array.from({ length: 6 })}
+          keyExtractor={(_, i) => i.toString()}
+          renderItem={() => <MovieItemSkeleton />}
+          contentContainerStyle={styles.list}
+        />
+      ) : (
+        <FlatList
+          data={movies}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => <MovieItem movie={item} />}
+          contentContainerStyle={styles.list}
+          onEndReached={() => {
+            if (hasNextPage) {
+              fetchNextPage();
+            }
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <ActivityIndicator style={{ margin: 16 }} />
+            ) : null
           }
-        }}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator style={{ margin: 16 }} />
-          ) : null
-        }
-      />
+        />
+      )}
     </View>
   );
 }
