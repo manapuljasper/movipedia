@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   Text,
   ScrollView,
@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Animated,
+  View,
 } from "react-native";
 import { useLocalSearchParams, Link, useRouter } from "expo-router";
 import { useMovie } from "@hooks/movies/useMovie";
@@ -23,8 +25,18 @@ export default function MovieDetailScreen() {
   const { data: movie, isLoading, error } = useMovie(id);
   const insets = useSafeAreaInsets();
 
+  const opacity = useRef(new Animated.Value(0)).current;
+
   const handleNavigateToTrailer = () => {
     router.push(`/movies/${id}/trailers`);
+  };
+
+  const onLoad = () => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
   };
 
   if (isLoading) return <LoadingScreen />;
@@ -39,14 +51,30 @@ export default function MovieDetailScreen() {
       testID="movie-detail-screen"
     >
       {movie.poster_path && (
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          }}
-          style={styles.poster}
-          resizeMode="cover"
-          testID="detail-poster"
-        />
+        <View>
+          {/* Placeholder underneath image */}
+          <Animated.View
+            style={[
+              styles.placeholder,
+              {
+                opacity: opacity.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0],
+                }),
+              },
+            ]}
+          />
+          {/* Fade-in poster image */}
+          <Animated.Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            }}
+            style={[styles.poster, { opacity }]}
+            resizeMode="cover"
+            onLoad={onLoad}
+            testID="detail-poster"
+          />
+        </View>
       )}
       <Text style={styles.title} testID="detail-title">
         {movie.title}
@@ -89,4 +117,9 @@ const styles = StyleSheet.create({
   date: { fontSize: 16, color: "#666", marginBottom: 16 },
   overview: { fontSize: 16, lineHeight: 22 },
   link: { marginTop: 16, fontSize: 16, color: "#1E90FF", fontWeight: "bold" },
+  placeholder: {
+    backgroundColor: "#ccc",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
