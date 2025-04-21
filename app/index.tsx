@@ -1,5 +1,5 @@
 import { MovieList } from "@/src/components/movies/MovieList/MovieList";
-import { useMovies } from "@/src/hooks/useMovies";
+import { useMovies } from "@hooks/movies/useMovies";
 import { Text, View, StyleSheet } from "react-native";
 
 export default function MoviesScreen() {

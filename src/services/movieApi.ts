@@ -1,5 +1,5 @@
 export interface Movie {
-  id: number;
+  id: string;
   title: string;
   overview: string;
   poster_path: string | null;
@@ -38,7 +38,7 @@ export async function fetchMovies(page = 1): Promise<MoviePage> {
  * Fetches details for a single movie by its TMDB ID.
  * @param movieId the TMDB movie ID
  */
-export async function fetchMovieById(movieId: number): Promise<Movie> {
+export async function fetchMovieById(movieId: string): Promise<Movie> {
   const url = `${BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`;
 
   const res = await fetch(url);

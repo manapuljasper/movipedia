@@ -9,6 +9,6 @@ export function getMovies(page = 1) {
   return fetchMovies(page);
 }
 
-export function getMovie(id: number) {
+export function getMovie(id: string) {
   return fetchMovieById(id);
 }

@@ -1,6 +1,14 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  Pressable,
+} from "react-native";
 import { Movie } from "@services/movieApi";
+import { Link, useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 const posterWidth = width / 3;
@@ -11,34 +19,46 @@ type MovieItemProps = {
 };
 
 export const MovieItem: React.FC<MovieItemProps> = ({ movie }) => {
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push(`/movies/${movie.id}`);
+  };
+
   return (
-    <View style={styles.card}>
-      {movie.poster_path ? (
-        <Image
-          source={{
-            uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-          }}
-          style={styles.poster}
-          resizeMode="cover"
-          testID="movie-poster"
-        />
-      ) : (
-        <View
-          style={[styles.poster, styles.placeholder]}
-          testID="poster-placeholder"
-        >
-          <Text style={styles.placeholderText}>No Image</Text>
+    <Pressable
+      onPress={handlePress}
+      style={styles.linkContainer}
+      testID="movie-item-pressable"
+    >
+      <View style={styles.card}>
+        {movie.poster_path ? (
+          <Image
+            source={{
+              uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+            }}
+            style={styles.poster}
+            resizeMode="cover"
+            testID="movie-poster"
+          />
+        ) : (
+          <View
+            style={[styles.poster, styles.placeholder]}
+            testID="poster-placeholder"
+          >
+            <Text style={styles.placeholderText}>No Image</Text>
+          </View>
+        )}
+        <View style={styles.info}>
+          <Text style={styles.title} testID="movie-title">
+            {movie.title}
+          </Text>
+          <Text style={styles.date} testID="movie-date">
+            {formatDate(movie.release_date)}
+          </Text>
         </View>
-      )}
-      <View style={styles.info}>
-        <Text style={styles.title} testID="movie-title">
-          {movie.title}
-        </Text>
-        <Text style={styles.date} testID="movie-date">
-          {formatDate(movie.release_date)}
-        </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -90,6 +110,9 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 14,
     color: "#666",
+  },
+  linkContainer: {
+    marginBottom: 16,
   },
 });
 
