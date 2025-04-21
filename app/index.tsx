@@ -1,3 +1,5 @@
+import ErrorScreen from "@/src/components/ErrorScreen";
+import LoadingScreen from "@/src/components/LoadingScreen";
 import MovieItem from "@/src/components/movies/MovieItem";
 import { MovieList } from "@/src/components/movies/MovieList/MovieList";
 import { useSearchMovies } from "@/src/hooks/movies/useSearchMovies";
@@ -26,8 +28,8 @@ export default function MoviesScreen() {
     isFetchingNextPage,
   } = search ? searchQuery : listQuery;
 
-  if (isLoading) return <Text>Loading movies…</Text>;
-  if (isError) return <Text>Error loading movies.</Text>;
+  if (isLoading) return <LoadingScreen />;
+  if (isError) return <ErrorScreen />;
 
   // flatten all pages’ results into one array
   const movies = data?.pages.flatMap((page) => page.results);

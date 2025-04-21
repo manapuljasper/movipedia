@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { useLocalSearchParams, Link, useRouter } from "expo-router";
 import { useMovie } from "@hooks/movies/useMovie";
+import LoadingScreen from "@/src/components/LoadingScreen";
+import ErrorScreen from "@/src/components/ErrorScreen";
 
 const { width } = Dimensions.get("window");
 const posterWidth = width - 32; // To offset the padding
@@ -23,8 +25,8 @@ export default function MovieDetailScreen() {
     router.push(`/movies/${id}/trailers`);
   };
 
-  if (isLoading) return <Text>Loading movie...</Text>;
-  if (error || !movie) return <Text>Error loading movie.</Text>;
+  if (isLoading) return <LoadingScreen />;
+  if (error || !movie) return <ErrorScreen />;
 
   return (
     <ScrollView

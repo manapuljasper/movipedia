@@ -11,6 +11,8 @@ import {
 import { useLocalSearchParams } from "expo-router";
 import { useMovieVideos } from "@hooks/movies/useMovieVideos";
 import { WebView } from "react-native-webview";
+import LoadingScreen from "@/src/components/LoadingScreen";
+import ErrorScreen from "@/src/components/ErrorScreen";
 
 const { width } = Dimensions.get("window");
 const videoHeight = (width / 16) * 9;
@@ -28,8 +30,8 @@ export default function MovieTrailersScreen() {
   const { data, isLoading, error } = useMovieVideos(id);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
-  if (isLoading) return <Text>Loading trailers...</Text>;
-  if (error || !data) return <Text>Error loading trailers.</Text>;
+  if (isLoading) return <LoadingScreen />;
+  if (error || !data) return <ErrorScreen />;
 
   const trailers = data.results.filter(
     (v) => v.type === "Trailer" && v.site === "YouTube"
