@@ -75,3 +75,24 @@ export async function fetchMovieVideos(movieId: number): Promise<VideoPage> {
   const data = (await res.json()) as VideoPage;
   return data;
 }
+
+/**
+ * Fetches a paginated search for movies matching `query`.
+ */
+export async function fetchSearchMovies(
+  query: string,
+  page = 1
+): Promise<MoviePage> {
+  const url =
+    `${BASE_URL}/search/movie` +
+    `?api_key=${TMDB_API_KEY}` +
+    `&language=en-US` +
+    `&query=${encodeURIComponent(query)}` +
+    `&page=${page}`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`TMDB search fetch error: ${res.status} ${res.statusText}`);
+  }
+  return (await res.json()) as MoviePage;
+}
