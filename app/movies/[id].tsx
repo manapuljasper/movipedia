@@ -11,7 +11,7 @@ import { useLocalSearchParams, Link, useRouter } from "expo-router";
 import { useMovie } from "@hooks/movies/useMovie";
 
 const { width } = Dimensions.get("window");
-const posterWidth = width;
+const posterWidth = width - 32; // To offset the padding
 const posterHeight = posterWidth * 1.5;
 
 export default function MovieDetailScreen() {
