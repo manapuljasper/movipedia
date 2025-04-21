@@ -11,6 +11,7 @@ import { useLocalSearchParams, Link, useRouter } from "expo-router";
 import { useMovie } from "@hooks/movies/useMovie";
 import LoadingScreen from "@/src/components/LoadingScreen";
 import ErrorScreen from "@/src/components/ErrorScreen";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 const posterWidth = width - 32; // To offset the padding
@@ -20,6 +21,7 @@ export default function MovieDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: movie, isLoading, error } = useMovie(id);
+  const insets = useSafeAreaInsets();
 
   const handleNavigateToTrailer = () => {
     router.push(`/movies/${id}/trailers`);
@@ -30,7 +32,10 @@ export default function MovieDetailScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[
+        styles.container,
+        { paddingBottom: 16 + insets.bottom },
+      ]}
       testID="movie-detail-screen"
     >
       {movie.poster_path && (
