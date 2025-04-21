@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { MOVIES_QUERY_KEYS, getMovies } from "../api/movieQueries";
 
-export function useMovies() {
+export function useMovies(page = 1) {
   return useQuery({
     queryKey: MOVIES_QUERY_KEYS.list,
-    queryFn: getMovies,
+    queryFn: () => getMovies(page),
   });
 }
