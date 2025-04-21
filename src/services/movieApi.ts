@@ -28,7 +28,7 @@ export interface VideoPage {
   results: Video[];
 }
 
-const TMDB_API_KEY = "6256afe136671b12f4ca075cf0800929";
+const TMDB_API_KEY = process.env.EXPO_PUBLIC_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
 /**
