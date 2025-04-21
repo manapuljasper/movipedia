@@ -1,5 +1,6 @@
 import ErrorScreen from "@/src/components/ErrorScreen";
 import LoadingScreen from "@/src/components/LoadingScreen";
+import MovieItemSkeleton from "@/src/components/MovieItemSkeleton";
 import MovieItem from "@/src/components/movies/MovieItem";
 import { MovieList } from "@/src/components/movies/MovieList/MovieList";
 import { useSearchMovies } from "@/src/hooks/movies/useSearchMovies";
@@ -28,7 +29,15 @@ export default function MoviesScreen() {
     isFetchingNextPage,
   } = search ? searchQuery : listQuery;
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading)
+    return (
+      <FlatList
+        data={Array.from({ length: 6 })}
+        keyExtractor={(_, i) => i.toString()}
+        renderItem={() => <MovieItemSkeleton />}
+        contentContainerStyle={styles.list}
+      />
+    );
   if (isError) return <ErrorScreen />;
 
   // flatten all pages’ results into one array
